@@ -1,2 +1,2 @@
 # Cloud-Computing
-Cloud Functions code
+All cloud computing code and files.
