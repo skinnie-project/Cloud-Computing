@@ -17,8 +17,13 @@ app.use(express.static('public'));
 
 // Menangani permintaan untuk halaman utama
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/documentation.html');
+  res.sendFile(__dirname + '/public/meowshop.html');
 });
+
+// Documentation
+app.get('/documentation', (req, res) => {
+    res.sendFile(__dirname + '/public/documentation.html');
+  });
 
 // Mengambil data dari MySQL
 app.get('/data', (req, res) => {

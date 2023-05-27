@@ -1,0 +1,536 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Raleway:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
+
+html {
+    scroll-behavior: smooth;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    background-color: #fdcb6a;
+    font-family: 'Raleway', sans-serif;
+    margin: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+h1 {
+    font-size: 56px;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
+.next {
+    text-align: center;
+    float: left;
+    padding-top: 8%;
+    width: 100%;
+}
+
+.nexts {
+
+    float: left;
+    padding-top: 4%;
+    width: 100%;
+}
+
+
+#content {
+    padding: 0% 5% 0% 0%;
+    float: left;
+}
+
+figcaption {
+    text-align: center;
+}
+
+.container {
+    float: left;
+}
+
+.greetings {
+    display: flex;
+    background-color: #ffffff;
+    justify-content: space-between;
+    padding: 0% 5% 0% 5%;
+}
+
+.right {
+    text-align: right;
+}
+
+.greetings2 {
+    display: flex;
+    background-color: #ffffff;
+    justify-content: space-between;
+    padding: 0% 5% 0% 5%;
+    background-image: linear-gradient(#ffffff, #fdcb6a);
+}
+
+.greet {
+    float: left;
+    width: 43%;
+}
+
+.side1 {
+    margin: 0;
+    padding-top: 8%;
+    padding-left: 5%;
+}
+
+#welcome {
+    width: 600px;
+}
+
+header {
+    float: left;
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    padding: 2% 5% 2% 5%;
+    justify-content: space-between;
+    background-color: #ffffff;
+}
+
+main {
+    float: left;
+    width: 100%;
+}
+
+.main {
+    display: flex;
+    justify-content: space-between;
+    padding: 0% 5% 0% 5%;
+}
+
+.food {
+    width: 400px;
+}
+
+footer {
+    float: left;
+    width: 100%;
+    background-color: #f3f3f3;
+}
+
+.center {
+    text-align: center;
+}
+
+.next p {
+    margin-top: 0;
+}
+
+.next h2 {
+    margin-bottom: 0;
+}
+
+.nexts p {
+    margin-top: 0;
+}
+
+.nexts h2 {
+    margin-bottom: 0;
+}
+
+.regular {
+    font-weight: 400;
+}
+
+.foot {
+    display: flex;
+    padding: 2% 5% 2% 5%;
+    justify-content: space-between;
+}
+
+#desc {
+    float: left;
+    width: 58%;
+    text-align: justify;
+    padding-right: 2%;
+}
+
+#description {
+    text-align: justify;
+}
+
+.staff {
+    padding: 0% 20% 4% 20%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.foodss {
+    display: flex;
+    justify-content: center;
+}
+
+.foods {
+    display: flex;
+    justify-content: space-between;
+}
+
+.foods p {
+    text-align: center;
+    margin: 0;
+}
+
+.staff p {
+    text-align: center;
+    margin: 0;
+}
+
+.poppins {
+    font-family: 'Poppins';
+}
+
+.bold {
+    font-weight: 600;
+}
+
+.cat {
+    width: 200px;
+}
+
+.light {
+    font-weight: 500;
+}
+
+td {
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-bottom: 5%;
+    font-weight: 600;
+}
+
+th {
+    padding-left: 10%;
+    padding-right: 10%;
+    text-align: left;
+    font-weight: 400;
+}
+
+#popupButton {
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
+    color: white;
+    border: 10px solid transparent;
+    border-radius: 5px;
+    background-color: #2D3E50;
+    cursor: pointer;
+
+}
+
+.side {
+    padding-left: 10%;
+}
+
+aside {
+    padding-top: 4%;
+}
+
+.aside {
+    float: right;
+    margin: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    padding: 5% 0% 5% 0%;
+}
+
+.item {
+    float: left;
+}
+
+.logo {
+    float: left;
+    width: 20%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    /* padding: 2% 3% 1% 3%; */
+}
+
+#logo {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    width: 100px;
+}
+
+.logo p {
+    font-family: 'Poppins';
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    float: right;
+    width: 50%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding-right: 2%;
+    /* padding: 5% 3% 7% 3%; */
+}
+
+nav ul.listnav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    display: block;
+    line-height: 1.1;
+    margin-top: 0;
+}
+
+h6 {
+    margin-bottom: 1%;
+}
+
+.contact {
+    display: flex;
+    padding-left: 20px;
+}
+
+nav li {
+    padding-left: 20px;
+}
+
+nav li a,
+a {
+    color: black;
+    text-decoration: none;
+}
+
+::after {
+    color: black;
+}
+
+nav li a:hover,
+a:hover {
+    text-decoration: underline;
+}
+
+#fotoProfil {
+    width: 200px;
+}
+
+@media screen and (min-width:1px) and (max-width:1100px) {
+
+    .greetings {
+        display: block;
+        background-color: #ffffff;
+        padding: 0% 5% 0% 5%;
+    }
+
+    .greet {
+        float: left;
+        width: 100%;
+    }
+
+    .greet h6 {
+        text-align: center;
+    }
+
+    .greet h1 {
+        text-align: center;
+        font-size: 50px;
+    }
+
+    .greet p {
+        padding-bottom: 30%;
+    }
+
+    .side1 {
+        display: block;
+        margin: auto;
+        padding: 0 0 0 0;
+    }
+
+    #welcome {
+        width: 100%;
+    }
+
+    .greetings2 {
+        display: flex;
+        background-color: #ffffff;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0% 5% 0% 5%;
+        background-image: linear-gradient(#ffffff, #fdcb6a);
+    }
+
+    .staff {
+        padding: 0% 20% 4% 20%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .staff p.bold {
+        padding-bottom: 10%;
+    }
+
+    .main {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0% 5% 0% 5%;
+    }
+
+    .nexts {
+        float: left;
+        padding-top: 4%;
+        width: 100%;
+    }
+
+    #content {
+        padding: 0% 0% 0% 0%;
+        float: left;
+    }
+
+    .container {
+        float: left;
+        width: 100%;
+    }
+
+    .foods {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .foods p {
+        text-align: center;
+        margin: 0;
+    }
+
+    .foods p.bold {
+        text-align: center;
+        margin: 0;
+        padding-bottom: 10%;
+    }
+
+    .food {
+        width: 350px;
+    }
+
+    .foodss p.bold {
+        padding-bottom: 10%;
+    }
+
+    aside {
+        display: block;
+        align-content: center;
+        margin-left: auto;
+        margin-right: auto;
+        padding-bottom: 4%;
+    }
+
+    .aside {
+        float: none;
+    }
+
+    table {
+        width: 100%;
+        align-self: center;
+    }
+
+    .foods div {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    section {
+        text-align: center;
+    }
+
+    .side {
+        padding-left: 0;
+    }
+
+    td {
+        width: 100%;
+        font-weight: 600;
+    }
+
+    th {
+        text-align: center;
+        width: 100%;
+        font-weight: 400;
+    }
+
+    .header {
+        display: flex;
+        padding: 2% 5% 2% 5%;
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: #ffffff;
+    }
+
+    .logo {
+        float: none;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* padding: 2% 3% 1% 3%; */
+    }
+
+    .poppins {
+        display: none;
+    }
+
+    nav {
+        float: none;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        padding-right: 0%;
+        padding-left: 0%;
+        /* padding: 5% 3% 7% 3%; */
+    }
+
+    nav ul.listnav {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .noPad {
+        padding-left: 0;
+    }
+
+    #popupButton {
+        font-family: 'Poppins', sans-serif;
+        text-transform: uppercase;
+        color: white;
+        border: 3px solid transparent;
+        border-radius: 5px;
+        background-color: #2D3E50;
+        cursor: pointer;
+    }
+
+    .contact {
+        display: flex;
+        padding-top: 4%;
+        padding-left: 0;
+    }
+}
