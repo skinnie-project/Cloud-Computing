@@ -6,6 +6,7 @@ from PIL import Image
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.regularizers import l2
+from flaskext.mysql import MySQL
 
 model = None
 classPred = ['incorrect_mask', 'with_mask', 'without_mask']
@@ -48,8 +49,113 @@ def load_model():
         download_model()
     model = make_model()
     model.load_weights("/tmp/no-tl-3.h5")
+    
 
 app = Flask(__name__)
+
+mysql = MySQL()
+
+# Konfigurasi koneksi MySQL
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'skinnie-db-project'
+app.config['MYSQL_DATABASE_DB'] = 'skinnie_database'
+app.config['MYSQL_DATABASE_HOST'] = '34.128.86.191'
+
+mysql.init_app(app)
+
+#=============================================================================
+
+@app.route('/register', methods=['POST'])
+def register():
+    # Mendapatkan data dari permintaan POST
+    data = request.get_json()
+    username = data['username']
+    nama = data['nama']
+    password = data['password']
+
+    # Membuat koneksi MySQL
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    try:
+        # Mengecek apakah username sudah terdaftar
+        cursor.execute("SELECT * FROM login_normal WHERE username = %s", (username,))
+        result = cursor.fetchone()
+
+        if result:
+            conn.close()
+            response = {
+                'status': 'error',
+                'message': 'Username sudah terdaftar'
+            }
+            return jsonify(response)
+
+        # Memasukkan data ke dalam tabel
+        cursor.execute("INSERT INTO login_normal (username, nama, password) VALUES (%s, %s, %s)", (username, nama, password))
+        conn.commit()
+        conn.close()
+
+        response = {
+            'status': 'success',
+            'message': 'Akun berhasil dibuat'
+        }
+
+        return jsonify(response)
+    except Exception as e:
+        conn.rollback()
+        conn.close()
+        response = {
+            'status': 'error',
+            'message': 'Terjadi kesalahan saat membuat akun',
+            'error': str(e)
+        }
+        return jsonify(response)
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    # Mendapatkan data dari permintaan POST
+    data = request.get_json()
+    username = data['username']
+    password = data['password']
+
+    # Membuat koneksi MySQL
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    try:
+        # Mengecek kecocokan username dan password di database
+        cursor.execute("SELECT * FROM login_normal WHERE username = %s AND password = %s", (username, password))
+        result = cursor.fetchone()
+
+        if result:
+            # Jika data ditemukan, mengembalikan nama dan username
+            nama = result[1]
+
+            response = {
+                'status': 'success',
+                'message': 'Login berhasil',
+                'username': username,
+                'nama': nama
+            }
+
+            return jsonify(response)
+        else:
+            conn.close()
+            response = {
+                'status': 'error',
+                'message': 'Username atau Password Salah'
+            }
+            return jsonify(response)
+    except Exception as e:
+        conn.close()
+        response = {
+            'status': 'error',
+            'message': 'Terjadi kesalahan saat login',
+            'error': str(e)
+        }
+        return jsonify(response)
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -69,6 +175,7 @@ def predict():
         # Validate file extension
         if file_extension not in ['.jpg', '.jpeg', '.png']:
             return jsonify({"error": "Invalid file format. Only JPG, JPEG, and PNG are supported."}), 400
+        
 
         # Upload image to Cloud Storage
         storage_client = storage.Client()
