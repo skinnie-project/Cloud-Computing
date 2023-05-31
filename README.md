@@ -13,6 +13,7 @@ https://skinnie.my.id/{endpoint}
 
 ```
 username  as string
+email     as string
 nama      as string
 password  as string
 ```
