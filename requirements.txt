@@ -1,0 +1,12 @@
+Flask
+Werkzeug
+joblib
+pandas
+numpy
+matplotlib
+scikit-learn
+tensorflow
+Pillow
+gunicorn
+google-cloud-storage
+flask-mysql
