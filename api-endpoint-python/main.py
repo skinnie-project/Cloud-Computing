@@ -5,38 +5,34 @@ import base64
 from PIL import Image
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.regularizers import l2
+from tensorflow.keras import regularizers
 from flaskext.mysql import MySQL
 
 model = None
-classPred = ['incorrect_mask', 'with_mask', 'without_mask']
+classPred = ['dry_data', 'normal_data', 'oily_data']
+
+img_size = (224, 224)
+channels = 3
+img_shape = (img_size[0], img_size[1], channels)
+
+base_model = tf.keras.applications.efficientnet.EfficientNetB3(include_top= False, weights= "imagenet", input_shape= img_shape, pooling= 'max')
 
 def make_model():
     model = tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(150, 150, 3)),
-        tf.keras.layers.MaxPooling2D(2, 2),
-        tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
-        tf.keras.layers.MaxPooling2D(2,2),
-        tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
-        tf.keras.layers.MaxPooling2D(2,2),
-        tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
-        tf.keras.layers.MaxPooling2D(2,2),
-        tf.keras.layers.Conv2D(512, (3,3), activation='relu'),
-        tf.keras.layers.MaxPooling2D(2,2),
-        tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(512, activation='relu', kernel_regularizer=l2(0.01)),
-        tf.keras.layers.Dropout(0.5),
-        tf.keras.layers.Dense(128, activation='relu', kernel_regularizer=l2(0.01)),
-        tf.keras.layers.Dropout(0.5),
-        tf.keras.layers.Dense(3, activation='softmax')
+        base_model,
+        tf.keras.layers.BatchNormalization(axis= -1, momentum= 0.99, epsilon= 0.001),
+        tf.keras.layers.Dense(256, kernel_regularizer= regularizers.l2(l= 0.016), activity_regularizer= regularizers.l1(0.006),
+                bias_regularizer= regularizers.l1(0.006), activation= 'relu'),
+        tf.keras.layers.Dropout(rate= 0.45, seed= 123),
+        tf.keras.layers.Dense(3, activation= 'softmax')
     ])
     return model
 
 bucket_name = "skinnie-bucket"
 
 def download_model():
-    model_file = "models/no-tl-3.h5"  # Replace with your model file name
-    destination_path = "/tmp/no-tl-3.h5"  # Path to store the downloaded model file
+    model_file = "models/efficientnetb3_98.h5"  # Replace with your model file name
+    destination_path = "/tmp/efficientnetb3_98.h5"  # Path to store the downloaded model file
 
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
@@ -45,10 +41,10 @@ def download_model():
 
 def load_model():
     global model
-    if not os.path.isfile("/tmp/no-tl-3.h5"):
+    if not os.path.isfile("/tmp/efficientnetb3_98.h5"):
         download_model()
     model = make_model()
-    model.load_weights("/tmp/no-tl-3.h5")
+    model.load_weights("/tmp/efficientnetb3_98.h5")
     
 
 app = Flask(__name__)
@@ -70,6 +66,7 @@ def register():
     # Mendapatkan data dari permintaan POST
     data = request.get_json()
     username = data['username']
+    email = data['email']
     nama = data['nama']
     password = data['password']
 
@@ -91,7 +88,7 @@ def register():
             return jsonify(response)
 
         # Memasukkan data ke dalam tabel
-        cursor.execute("INSERT INTO login_normal (username, nama, password) VALUES (%s, %s, %s)", (username, nama, password))
+        cursor.execute("INSERT INTO login_normal (username, email, nama, password) VALUES (%s, %s, %s, %s)", (username, email, nama, password))
         conn.commit()
         conn.close()
 
@@ -193,7 +190,7 @@ def predict():
         latest_blob.download_to_filename("/tmp/latest_image.jpg")
 
         img = Image.open("/tmp/latest_image.jpg")
-        test_image_resized = img.resize((150, 150))
+        test_image_resized = img.resize((224, 224))
         img_array = np.array(test_image_resized) / 255.0
         img_test = np.expand_dims(img_array, axis=0)
 
