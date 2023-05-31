@@ -207,6 +207,41 @@ def predict():
         }), 200
     except Exception as e:
         return str(e), 500
+    
+@app.route('/register/google', methods=['POST'])
+def register_google():
+    # Mendapatkan data dari permintaan POST
+    data = request.get_json()
+    fullname = data['name']
+    nickname = data['nickname']
+    email = data['email']
+
+    # Membuat koneksi MySQL
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    try:
+
+        # Memasukkan data ke dalam tabel
+        cursor.execute("INSERT INTO login_google (fullname, nickname, email) VALUES (%s, %s, %s)", (fullname, nickname, email))
+        conn.commit()
+        conn.close()
+
+        response = {
+            'status': 'success',
+            'message': 'Data akun berhasil ditambahkan'
+        }
+
+        return jsonify(response)
+    except Exception as e:
+        conn.rollback()
+        conn.close()
+        response = {
+            'status': 'error',
+            'message': 'Terjadi kesalahan saat menambahkan data akun',
+            'error': str(e)
+        }
+        return jsonify(response)
 
 if __name__ == '__main__':
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "key.json"  # Set the service account credentials
