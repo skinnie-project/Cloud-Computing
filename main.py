@@ -1,6 +1,7 @@
 import os
 from google.cloud import storage
 from flask import Flask, request, jsonify
+import requests
 
 #ini yang baru ka
 from tensorflow.keras.models import load_model
@@ -89,6 +90,44 @@ def predict():
     predicted_class = predict_image('uploaded_image.jpg')
     return jsonify({'prediction': predicted_class})
 
+def upload_image_to_storage(image_base64, filename):
+    
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+
+    directory = "uploaded-photos"
+    blob_path = f"{directory}/{filename}"
+    file_blob = bucket.blob(blob_path)
+
+    # Decode base64 image data
+    image_data = base64.b64decode(image_base64)
+
+    # Upload the image file to Google Cloud Storage
+    file_blob.upload_from_string(image_data, content_type='image/jpeg')
+    print(f"Image {filename} uploaded to Google Cloud Storage.")
+
+    # filez_blob = bucket.blob(filename)
+    # filez_blob.make_public()
+    print(f"Image {filename} has been public.")
+
+    image_url = f"https://storage.googleapis.com/{bucket_name}/uploaded-photos/{filename}"
+    return image_url
+
+@app.route('/predict/base64', methods=['POST'])
+def predict_base64():
+    # url = request.json['image_url']
+    image_base64 = request.json['image']
+    filename = request.json['filename']
+    olahb64 = upload_image_to_storage(image_base64, filename)
+    
+    response = requests.get(olahb64)
+    image = Image.open(io.BytesIO(response.content))
+    # image = Image.open(BytesIO(olahb64))
+    image.save('uploaded_images.jpg')
+    # file = request.files['image']
+    # file.save('uploaded_image.jpg')
+    predicted_class = predict_image('uploaded_images.jpg')
+    return jsonify({'prediction': predicted_class})
 
 @app.route('/register', methods=['POST'])
 def register():
