@@ -87,8 +87,8 @@ def predict_image(image_path):
 def predict():
     file = request.files['image']
     file.save('uploaded_image.jpg')
-    predicted_class = predict_image('uploaded_image.jpg')
-    return jsonify({'prediction': predicted_class})
+    returned_predicted_class, returned_predicted = predict_image('uploaded_images.jpg')
+    return jsonify({'prediction_rate': returned_predicted_class, 'predicted': returned_predicted})
 
 def upload_image_to_storage(image_base64, filename):
     
@@ -126,8 +126,8 @@ def predict_base64():
     image.save('uploaded_images.jpg')
     # file = request.files['image']
     # file.save('uploaded_image.jpg')
-    predicted_class = predict_image('uploaded_images.jpg')
-    return jsonify({'prediction': predicted_class})
+    returned_predicted_class, returned_predicted = predict_image('uploaded_images.jpg')
+    return jsonify({'prediction_rate': returned_predicted_class, 'predicted': returned_predicted})
 
 @app.route('/register', methods=['POST'])
 def register():
