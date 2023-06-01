@@ -38,3 +38,26 @@ password  as string
 ```
 image     as files
 ```
+
+### Register Google
+
+* Endpoint  : /register/google
+* Method    : POST
+* Request body :
+
+```
+name      as string
+nickname  as string
+email     as string
+```
+
+### Predict base64
+
+* Endpoint  : /predict/base64
+* Method    : POST
+* Request body :
+
+```
+image     as string
+filename  as string
+```
