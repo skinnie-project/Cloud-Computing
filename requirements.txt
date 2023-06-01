@@ -10,3 +10,4 @@ Pillow
 gunicorn
 google-cloud-storage
 flask-mysql
+requests
