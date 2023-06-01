@@ -36,8 +36,5 @@ password  as string
 * Request body :
 
 ```
-image     as base64
-filename  as string
+image     as files
 ```
-
-* Referensi: https://github.com/zarkiya/vision-api
