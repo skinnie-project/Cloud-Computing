@@ -78,7 +78,7 @@ def upload_image_to_storage(image_base64, filename):
     return image_url
 
 
-data = pd.read_csv('new_dataset.csv')  # Update with your CSV file path
+data = pd.read_csv('new_dataset2.csv', sep=';')  # Update with your CSV file path
 products = data.to_dict(orient='records')
 
 descriptions = [product['product_name'] + ' ' + product['ingredients'] for product in products]
@@ -121,7 +121,37 @@ def content_recommendations(user_skin_type):
     print("Recommended Products:")
     print("----------------------")
     
-    return sorted_products[['product_name', 'suitable_for', 'ingredients', 'rate','brand']]
+    recommendations = []
+
+    for _, row in sorted_products.iterrows():
+        recommendation = {
+            'product_name': row['product_name'],
+            'suitable_for': row['suitable_for'],
+            'ingredients': row['ingredients'],
+            'rate': row['rate'],
+            'brand': row['brand'],
+            'url_new': row['url_new'],
+            'id': row['id'],
+            'subcategory': row['subcategory'],
+            'recom': row['recom'],
+            'reviewed': row['reviewed'],
+            'price': row['price'],
+            'description': row['description'],
+            'how_to_use': row['how_to_use']
+            
+        }
+        recommendations.append(recommendation)
+        
+        if len(recommendations) == 20: # Maximum list
+            break
+
+    return recommendations
+    
+    # top_recommendation = sorted_products.iloc[0] # Get only one
+    # top_recommendation = sorted_products.head(10)  # Get the top recommendation
+
+    # return top_recommendation[['product_name', 'suitable_for', 'ingredients', 'rate', 'brand']]
+    # return sorted_products[['product_name', 'suitable_for', 'ingredients', 'rate','brand']]
 
 
 #=============================================================================
@@ -417,9 +447,32 @@ def get_product_rekomen():
     skin_type = request.args.get('skin_type')
 
     recommendations = content_recommendations(skin_type)
+
+    # recommendations_json = recommendations.to_json(orient='records')
+
+    # input_list = json.loads(recommendations_json)
+
+    # # Extract the necessary values from the top recommendation
+    # product_name = input_list[0]
+    # predicted_skin_type = input_list[1]
+    # ingredients = input_list[2]
+    # rate = float(input_list[3])
+    # brand = input_list[4]
+
+    # output_json = {
+    #     "predicted": predicted_skin_type,
+    #     "product_name": product_name,
+    #     "brand": brand,
+    #     "rate": rate,
+    #     "ingredients": ingredients
+        
+    # }
     # Convert the recommendations to JSON format
-    recommendations_json = recommendations.to_json(orient='records')
-    return jsonify(recommendations_json)
+    
+
+    
+
+    return jsonify(recommendations)
     
 
 if __name__ == '__main__':
