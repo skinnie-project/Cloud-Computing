@@ -130,7 +130,7 @@ def get_predict_result():
     conn = mysql.connect()
     cursor = conn.cursor()
 
-    query = "SELECT * FROM list_skincare WHERE suitable_for LIKE '%" + predicted_result + "%' AND ingredients LIKE '%" + key_ingredients + "%' ORDER BY reviewed DESC LIMIT 1"
+    query = "SELECT * FROM list_skincare WHERE suitable_for LIKE '%" + predicted_result + "%' AND ingredients LIKE '%" + key_ingredients + "%' ORDER BY reviewed DESC LIMIT 10"
     cursor.execute(query)
 
     try:
@@ -326,6 +326,55 @@ def register_google():
         }
         return jsonify(response)
 
+
+@app.route('/data/detail', methods=['GET'])
+def get_product_detail():
+    # Mendapatkan data dari permintaan POST
+    # data = request.get_json()
+    product_id = request.args.get('id')
+
+    # Membuat koneksi MySQL
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    query = "SELECT * FROM list_skincare WHERE id = '" + product_id + "'"
+    cursor.execute(query)
+    
+    try:
+        # Mendapatkan hasil query
+        rows = cursor.fetchall()
+
+        # Mengubah hasil query menjadi format JSON yang terstruktur
+        results = []
+        for row in rows:
+            result = {
+                'id': row[0],
+                'product_name': row[1],
+                'brand': row[2],
+                'subcategory': row[3],
+                'rate': row[4],
+                'reviewed': row[5],
+                'recom': row[6],
+                'price': row[7],
+                'description': row[8],
+                'how_to_use': row[9],
+                'ingredients': row[10],
+                'suitable_for': row[11],
+                'url_new': row[12]
+            }
+            results.append(result)
+
+        # Mengembalikan hasil dalam format JSON
+        return jsonify(results)
+
+    except Exception as e:
+        conn.close()
+        response = {
+            'status': 'error',
+            'message': 'Terjadi kesalahan saat mengambil data',
+            'error': str(e)
+        }
+        return jsonify(response)
 
 if __name__ == '__main__':
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "key.json"  # Set the service account credentials
