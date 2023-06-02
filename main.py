@@ -15,11 +15,21 @@ from flaskext.mysql import MySQL
 import io
 import requests
 from io import BytesIO
+# import pymysql
 
+
+# classPred = ['incorrect_mask', 'with_mask', 'without_mask']
 
 bucket_name = "skinnie-bucket"
 
+# model = None
+
+
+
 app = Flask(__name__)
+
+
+
 
 mysql = MySQL()
 
@@ -38,6 +48,8 @@ def load_my_model():
     model = load_model('model1.h5')
     model.load_weights('model1-weights.h5')
 
+#ini yang baru ka
+
 def predict_image(image_path):
     # model = load_model('model1.h5')
     # model.load_weights('model1-weights.h5')
@@ -48,7 +60,7 @@ def predict_image(image_path):
     img = np.expand_dims(img, axis=0)
     img = preprocess_input(img)
     pred = model.predict(img)
-    classes = ['dry', 'normal', 'oily']
+    classes = ['Kering', 'Normal', 'Berminyak']
     predicted_class = {class_name: float(pred[0][i]) for i, class_name in enumerate(classes)}
     predicted = classes[np.argmax(pred)]
     return predicted_class, predicted
@@ -100,8 +112,63 @@ def predict_base64():
     # file = request.files['image']
     # file.save('uploaded_image.jpg')
     # predicted_class = predict_image('uploaded_images.jpg')
+    global predicted_result
     returned_predicted_class, returned_predicted = predict_image('uploaded_images.jpg')
+    
+    predicted_result = returned_predicted
+    print(predicted_result)
     return jsonify({'prediction_rate': returned_predicted_class, 'predicted': returned_predicted})
+
+@app.route('/predict/result', methods=['GET'])
+def get_predict_result():
+    # Mendapatkan data dari permintaan POST
+    # data = request.get_json()
+    key_ingredients = request.args.get('ingredients')
+    predicted_result = request.args.get('predicted')
+
+    # Membuat koneksi MySQL
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    query = "SELECT * FROM list_skincare WHERE suitable_for LIKE '%" + predicted_result + "%' AND ingredients LIKE '%" + key_ingredients + "%' ORDER BY reviewed DESC LIMIT 1"
+    cursor.execute(query)
+
+    try:
+        # Mendapatkan hasil query
+        rows = cursor.fetchall()
+
+        # Mengubah hasil query menjadi format JSON yang terstruktur
+        results = []
+        for row in rows:
+            result = {
+                'id': row[0],
+                'product_name': row[1],
+                'brand': row[2],
+                'subcategory': row[3],
+                'rate': row[4],
+                'reviewed': row[5],
+                'recom': row[6],
+                'price': row[7],
+                'description': row[8],
+                'how_to_use': row[9],
+                'ingredients': row[10],
+                'suitable_for': row[11],
+                'url_new': row[12]
+            }
+            results.append(result)
+
+        # Mengembalikan hasil dalam format JSON
+        return jsonify(results)
+
+
+    except Exception as e:
+        conn.close()
+        response = {
+            'status': 'error',
+            'message': 'Terjadi kesalahan saat mengambil data',
+            'error': str(e)
+        }
+        return jsonify(response)
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -262,15 +329,5 @@ def register_google():
 
 if __name__ == '__main__':
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "key.json"  # Set the service account credentials
-    load_my_model()
+    # load_my_model()
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 3000)))
-
-
-
-
-
-
-
-
-
-
