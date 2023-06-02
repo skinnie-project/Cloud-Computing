@@ -264,3 +264,13 @@ if __name__ == '__main__':
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "key.json"  # Set the service account credentials
     load_my_model()
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 3000)))
+
+
+
+
+
+
+
+
+
+
