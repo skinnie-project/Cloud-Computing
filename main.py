@@ -45,7 +45,6 @@ def load_my_model():
     model.load_weights('model1-weights.h5')
 
 #ini yang baru ka
-@tf.function
 def predict_image(image_path):
     # model = load_model('model1.h5')
     # model.load_weights('model1-weights.h5')
