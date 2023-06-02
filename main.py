@@ -17,13 +17,7 @@ import requests
 from io import BytesIO
 
 
-# classPred = ['incorrect_mask', 'with_mask', 'without_mask']
-
 bucket_name = "skinnie-bucket"
-
-# model = None
-
-
 
 app = Flask(__name__)
 
@@ -44,8 +38,6 @@ def load_my_model():
     model = load_model('model1.h5')
     model.load_weights('model1-weights.h5')
 
-#ini yang baru ka
-@tf.function
 def predict_image(image_path):
     # model = load_model('model1.h5')
     # model.load_weights('model1-weights.h5')
@@ -116,6 +108,7 @@ def register():
     # Mendapatkan data dari permintaan POST
     data = request.get_json()
     username = data['username']
+    email = data['email']
     nama = data['nama']
     password = data['password']
 
@@ -137,7 +130,7 @@ def register():
             return jsonify(response)
 
         # Memasukkan data ke dalam tabel
-        cursor.execute("INSERT INTO login_normal (username, nama, password) VALUES (%s, %s, %s)", (username, nama, password))
+        cursor.execute("INSERT INTO login_normal (username, email, nama, password) VALUES (%s, %s, %s, %s)", (username, email, nama, password))
         conn.commit()
         conn.close()
 
@@ -269,5 +262,5 @@ def register_google():
 
 if __name__ == '__main__':
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "key.json"  # Set the service account credentials
-    # load_model()
+    load_my_model()
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 3000)))
