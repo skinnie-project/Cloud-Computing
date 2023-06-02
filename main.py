@@ -1,8 +1,6 @@
 import os
 from google.cloud import storage
 from flask import Flask, request, jsonify
-
-#ini yang baru ka
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.efficientnet import preprocess_input
@@ -15,21 +13,12 @@ from flaskext.mysql import MySQL
 import io
 import requests
 from io import BytesIO
-# import pymysql
-
-
-# classPred = ['incorrect_mask', 'with_mask', 'without_mask']
+import pickle
+import pandas as pd
 
 bucket_name = "skinnie-bucket"
 
-# model = None
-
-
-
 app = Flask(__name__)
-
-
-
 
 mysql = MySQL()
 
@@ -88,8 +77,54 @@ def upload_image_to_storage(image_base64, filename):
     image_url = f"https://storage.googleapis.com/{bucket_name}/uploaded-photos/{filename}"
     return image_url
 
+
+data = pd.read_csv('new_dataset.csv')  # Update with your CSV file path
+products = data.to_dict(orient='records')
+
+descriptions = [product['product_name'] + ' ' + product['ingredients'] for product in products]
+skin_types = [product['suitable_for'] for product in products]
+ratings = [product['rate'] for product in products]
+
+def content_recommendations(user_skin_type):
+
+    with open('model.pkl', 'rb') as f:
+        model = pickle.load(f)
+
+    with open('vectorizer.pkl', 'rb') as f:
+        vectorizer = pickle.load(f)
+
+    user_input = vectorizer.transform([user_skin_type])
+    model.predict(user_input)
+
+    skin_types_series = pd.Series(skin_types)
+
+    if user_skin_type == 'Normal':
+        filtered_indices = np.where(skin_types_series.isin([user_skin_type, 'Semua jenis kulit']))[0]
+    elif user_skin_type == 'Kering':
+        filtered_indices = np.where(skin_types_series.isin([user_skin_type, 'Semua jenis kulit']))[0]
+    elif user_skin_type == 'Berminyak':
+        filtered_indices = np.where(skin_types_series.isin([user_skin_type, 'Semua jenis kulit']))[0]
+    else:
+        filtered_indices = []
+
+    filtered_products = [products[i] for i in filtered_indices]
+
+    # Convert filtered_products to a DataFrame
+    df_filtered_products = pd.DataFrame(filtered_products)
+
+    # Create a column to store the priority for sorting
+    df_filtered_products['priority'] = df_filtered_products['suitable_for'].apply(lambda x: 0 if x == user_skin_type else 1)
+
+    # Sort the DataFrame by 'priority', 'suitable_for', and 'rate' columns
+    sorted_products = df_filtered_products.sort_values(by=['priority', 'suitable_for', 'rate'], ascending=[True, False, False])
+
+    print("Recommended Products:")
+    print("----------------------")
+    
+    return sorted_products[['product_name', 'suitable_for', 'ingredients', 'rate','brand']]
+
+
 #=============================================================================
-#ini yang baru ka
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -375,6 +410,17 @@ def get_product_detail():
             'error': str(e)
         }
         return jsonify(response)
+
+
+@app.route('/predict/recommend', methods=['GET'])
+def get_product_rekomen():
+    skin_type = request.args.get('skin_type')
+
+    recommendations = content_recommendations(skin_type)
+    # Convert the recommendations to JSON format
+    recommendations_json = recommendations.to_json(orient='records')
+    return jsonify(recommendations_json)
+    
 
 if __name__ == '__main__':
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "key.json"  # Set the service account credentials

@@ -1,2 +1,5 @@
 model1.h5
 model1-weights.h5
+model.pkl
+vectorizer.pkl
+new_dataset.csv
