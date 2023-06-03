@@ -1,6 +1,5 @@
-model1.h5
-model1-weights.h5
-model.pkl
-vectorizer.pkl
-new_dataset.csv
-new_dataset2.csv
+model
+model/model1.h5
+model/model1-weights.h5
+model/model.pkl
+model/vectorizer.pkl
