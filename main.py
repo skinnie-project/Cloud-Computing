@@ -21,7 +21,6 @@ bucket_name = "skinnie-bucket"
 app = Flask(__name__)
 
 mysql = MySQL()
-
 # Konfigurasi koneksi MySQL
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'skinnie-db-project'
@@ -37,11 +36,8 @@ def load_my_model():
     model = load_model('model1.h5')
     model.load_weights('model1-weights.h5')
 
-#ini yang baru ka
 
 def predict_image(image_path):
-    # model = load_model('model1.h5')
-    # model.load_weights('model1-weights.h5')
     if model is None:
         load_my_model()
     img = image.load_img(image_path, target_size=(224, 224))
@@ -53,6 +49,7 @@ def predict_image(image_path):
     predicted_class = {class_name: float(pred[0][i]) for i, class_name in enumerate(classes)}
     predicted = classes[np.argmax(pred)]
     return predicted_class, predicted
+
 
 def upload_image_to_storage(image_base64, filename):
     
@@ -86,7 +83,6 @@ skin_types = [product['suitable_for'] for product in products]
 ratings = [product['rate'] for product in products]
 
 def content_recommendations(user_skin_type):
-
     with open('model.pkl', 'rb') as f:
         model = pickle.load(f)
 
@@ -146,91 +142,49 @@ def content_recommendations(user_skin_type):
             break
 
     return recommendations
-    
-    # top_recommendation = sorted_products.iloc[0] # Get only one
-    # top_recommendation = sorted_products.head(10)  # Get the top recommendation
-
-    # return top_recommendation[['product_name', 'suitable_for', 'ingredients', 'rate', 'brand']]
-    # return sorted_products[['product_name', 'suitable_for', 'ingredients', 'rate','brand']]
-
 
 #=============================================================================
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    file = request.files['image']
-    file.save('uploaded_image.jpg')
-    returned_predicted_class, returned_predicted = predict_image('uploaded_images.jpg')
-    return jsonify({'prediction_rate': returned_predicted_class, 'predicted': returned_predicted})
-
-@app.route('/predict/base64', methods=['POST'])
-def predict_base64():
-    # url = request.json['image_url']
-    image_base64 = request.json['image']
-    filename = request.json['filename']
-    olahb64 = upload_image_to_storage(image_base64, filename)
-    
-    response = requests.get(olahb64)
-    image = Image.open(BytesIO(response.content))
-    # image = Image.open(BytesIO(olahb64))
-    image.save('uploaded_images.jpg')
-    # file = request.files['image']
-    # file.save('uploaded_image.jpg')
-    # predicted_class = predict_image('uploaded_images.jpg')
-    global predicted_result
-    returned_predicted_class, returned_predicted = predict_image('uploaded_images.jpg')
-    
-    predicted_result = returned_predicted
-    print(predicted_result)
-    return jsonify({'prediction_rate': returned_predicted_class, 'predicted': returned_predicted})
-
-@app.route('/predict/result', methods=['GET'])
-def get_predict_result():
+@app.route('/login', methods=['POST'])
+def login():
     # Mendapatkan data dari permintaan POST
-    # data = request.get_json()
-    key_ingredients = request.args.get('ingredients')
-    predicted_result = request.args.get('predicted')
+    data = request.get_json()
+    username = data['username']
+    password = data['password']
 
     # Membuat koneksi MySQL
     conn = mysql.connect()
     cursor = conn.cursor()
 
-    query = "SELECT * FROM list_skincare WHERE suitable_for LIKE '%" + predicted_result + "%' AND ingredients LIKE '%" + key_ingredients + "%' ORDER BY reviewed DESC LIMIT 10"
-    cursor.execute(query)
-
     try:
-        # Mendapatkan hasil query
-        rows = cursor.fetchall()
+        # Mengecek kecocokan username dan password di database
+        cursor.execute("SELECT * FROM login_normal WHERE username = %s AND password = %s", (username, password))
+        result = cursor.fetchone()
 
-        # Mengubah hasil query menjadi format JSON yang terstruktur
-        results = []
-        for row in rows:
-            result = {
-                'id': row[0],
-                'product_name': row[1],
-                'brand': row[2],
-                'subcategory': row[3],
-                'rate': row[4],
-                'reviewed': row[5],
-                'recom': row[6],
-                'price': row[7],
-                'description': row[8],
-                'how_to_use': row[9],
-                'ingredients': row[10],
-                'suitable_for': row[11],
-                'url_new': row[12]
+        if result:
+            # Jika data ditemukan, mengembalikan nama dan username
+            nama = result[1]
+
+            response = {
+                'status': 'success',
+                'message': 'Login berhasil',
+                'username': username,
+                'nama': nama
             }
-            results.append(result)
 
-        # Mengembalikan hasil dalam format JSON
-        return jsonify(results)
-
-
+            return jsonify(response)
+        else:
+            conn.close()
+            response = {
+                'status': 'error',
+                'message': 'Username atau Password Salah'
+            }
+            return jsonify(response)
     except Exception as e:
         conn.close()
         response = {
             'status': 'error',
-            'message': 'Terjadi kesalahan saat mengambil data',
+            'message': 'Terjadi kesalahan saat login',
             'error': str(e)
         }
         return jsonify(response)
@@ -282,80 +236,7 @@ def register():
         }
         return jsonify(response)
 
-@app.route('/login', methods=['POST'])
-def login():
-    # Mendapatkan data dari permintaan POST
-    data = request.get_json()
-    username = data['username']
-    password = data['password']
 
-    # Membuat koneksi MySQL
-    conn = mysql.connect()
-    cursor = conn.cursor()
-
-    try:
-        # Mengecek kecocokan username dan password di database
-        cursor.execute("SELECT * FROM login_normal WHERE username = %s AND password = %s", (username, password))
-        result = cursor.fetchone()
-
-        if result:
-            # Jika data ditemukan, mengembalikan nama dan username
-            nama = result[1]
-
-            response = {
-                'status': 'success',
-                'message': 'Login berhasil',
-                'username': username,
-                'nama': nama
-            }
-
-            return jsonify(response)
-        else:
-            conn.close()
-            response = {
-                'status': 'error',
-                'message': 'Username atau Password Salah'
-            }
-            return jsonify(response)
-    except Exception as e:
-        conn.close()
-        response = {
-            'status': 'error',
-            'message': 'Terjadi kesalahan saat login',
-            'error': str(e)
-        }
-        return jsonify(response)
-
-@app.route('/data/random', methods=['GET'])
-def get_random_data():
-    # Mendapatkan data dari permintaan POST
-    # data = request.get_json()
-    # username = data['username']
-    # password = data['password']
-
-    # Membuat koneksi MySQL
-    conn = mysql.connect()
-    cursor = conn.cursor()
-
-    query = 'SELECT * FROM list_skincare ORDER BY RAND() LIMIT 1'
-
-    try:
-        # Mengecek kecocokan username dan password di database
-        cursor.execute(query)
-        result = cursor.fetchall()
-
-        return jsonify(result)
-
-       
-    except Exception as e:
-        conn.close()
-        response = {
-            'status': 'error',
-            'message': 'Terjadi kesalahan saat mengambil data',
-            'error': str(e)
-        }
-        return jsonify(response)
-    
 @app.route('/register/google', methods=['POST'])
 def register_google():
     # Mendapatkan data dari permintaan POST
@@ -392,10 +273,96 @@ def register_google():
         return jsonify(response)
 
 
+@app.route('/forgot', methods=['POST'])
+def forgot():
+    data = request.get_json()
+    username = data['username']
+    new_password = data['new_password']
+
+    # Membuat koneksi MySQL
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    try:
+        # Mengecek apakah username sudah terdaftar
+        cursor.execute("SELECT * FROM login_normal WHERE username = %s", (username,))
+        result = cursor.fetchone()
+
+        if not result:
+            conn.close()
+            response = {
+                'status': 'error',
+                'message': 'Username tidak terdaftar'
+            }
+            return jsonify(response)
+
+        else:
+            query = "UPDATE login_normal SET `password` = '" + new_password + "' WHERE `username` = '" + username + "'"
+            cursor.execute(query)
+            conn.commit()
+            conn.close()
+
+            response = {
+                'status': 'success',
+                'message': 'Berhasil ganti password'
+            }
+
+            return jsonify(response)
+    except Exception as e:
+        conn.rollback()
+        conn.close()
+        response = {
+            'status': 'error',
+            'message': 'Terjadi kesalahan',
+            'error': str(e)
+        }
+        return jsonify(response)
+
+
+@app.route('/data/popular', methods=['GET'])
+def get_popular():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    query = 'SELECT * FROM list_skincare ORDER BY reviewed DESC LIMIT 30'
+    cursor.execute(query)
+
+    try:
+        rows = cursor.fetchall()
+        results = []
+        for row in rows:
+            result = {
+                'id': row[0],
+                'product_name': row[1],
+                'brand': row[2],
+                'subcategory': row[3],
+                'rate': row[4],
+                'reviewed': row[5],
+                'recom': row[6],
+                'price': row[7],
+                'description': row[8],
+                'how_to_use': row[9],
+                'ingredients': row[10],
+                'suitable_for': row[11],
+                'url_new': row[12]
+            }
+            results.append(result)
+
+        # Mengembalikan hasil dalam format JSON
+        return jsonify(results)
+    
+    except Exception as e:
+        conn.close()
+        response = {
+            'status': 'error',
+            'message': 'Terjadi kesalahan saat mengambil data',
+            'error': str(e)
+        }
+        return jsonify(response)
+
+
 @app.route('/data/detail', methods=['GET'])
 def get_product_detail():
-    # Mendapatkan data dari permintaan POST
-    # data = request.get_json()
     product_id = request.args.get('id')
 
     # Membuat koneksi MySQL
@@ -408,8 +375,6 @@ def get_product_detail():
     try:
         # Mendapatkan hasil query
         rows = cursor.fetchall()
-
-        # Mengubah hasil query menjadi format JSON yang terstruktur
         results = []
         for row in rows:
             result = {
@@ -442,40 +407,119 @@ def get_product_detail():
         return jsonify(response)
 
 
+@app.route('/predict', methods=['POST'])
+def predict():
+    file = request.files['image']
+    file.save('uploaded_image.jpg')
+    returned_predicted_class, returned_predicted = predict_image('uploaded_images.jpg')
+    return jsonify({'prediction_rate': returned_predicted_class, 'predicted': returned_predicted})
+
+
+@app.route('/predict/base64', methods=['POST'])
+def predict_base64():
+    # url = request.json['image_url']
+    image_base64 = request.json['image']
+    filename = request.json['filename']
+    olahb64 = upload_image_to_storage(image_base64, filename)
+    
+    response = requests.get(olahb64)
+    image = Image.open(BytesIO(response.content))
+    # image = Image.open(BytesIO(olahb64))
+    image.save('uploaded_images.jpg')
+    # file = request.files['image']
+    # file.save('uploaded_image.jpg')
+    # predicted_class = predict_image('uploaded_images.jpg')
+    global predicted_result
+    returned_predicted_class, returned_predicted = predict_image('uploaded_images.jpg')
+    
+    predicted_result = returned_predicted
+    print(predicted_result)
+    return jsonify({'prediction_rate': returned_predicted_class, 'predicted': returned_predicted})
+
+
+@app.route('/predict/result', methods=['GET'])
+def get_predict_result():
+    key_ingredients = request.args.get('ingredients')
+    predicted_result = request.args.get('predicted')
+
+    # Membuat koneksi MySQL
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    query = "SELECT * FROM list_skincare WHERE suitable_for LIKE '%" + predicted_result + "%' AND ingredients LIKE '%" + key_ingredients + "%' ORDER BY reviewed DESC LIMIT 10"
+    cursor.execute(query)
+
+    try:
+        # Mendapatkan hasil query
+        rows = cursor.fetchall()
+
+        # Mengubah hasil query menjadi format JSON yang terstruktur
+        results = []
+        for row in rows:
+            result = {
+                'id': row[0],
+                'product_name': row[1],
+                'brand': row[2],
+                'subcategory': row[3],
+                'rate': row[4],
+                'reviewed': row[5],
+                'recom': row[6],
+                'price': row[7],
+                'description': row[8],
+                'how_to_use': row[9],
+                'ingredients': row[10],
+                'suitable_for': row[11],
+                'url_new': row[12]
+            }
+            results.append(result)
+
+        # Mengembalikan hasil dalam format JSON
+        return jsonify(results)
+
+
+    except Exception as e:
+        conn.close()
+        response = {
+            'status': 'error',
+            'message': 'Terjadi kesalahan saat mengambil data',
+            'error': str(e)
+        }
+        return jsonify(response)
+    
+
 @app.route('/predict/recommend', methods=['GET'])
 def get_product_rekomen():
-    skin_type = request.args.get('skin_type')
-
+    skin_type = request.args.get('predicted')
     recommendations = content_recommendations(skin_type)
-
-    # recommendations_json = recommendations.to_json(orient='records')
-
-    # input_list = json.loads(recommendations_json)
-
-    # # Extract the necessary values from the top recommendation
-    # product_name = input_list[0]
-    # predicted_skin_type = input_list[1]
-    # ingredients = input_list[2]
-    # rate = float(input_list[3])
-    # brand = input_list[4]
-
-    # output_json = {
-    #     "predicted": predicted_skin_type,
-    #     "product_name": product_name,
-    #     "brand": brand,
-    #     "rate": rate,
-    #     "ingredients": ingredients
-        
-    # }
-    # Convert the recommendations to JSON format
     
-
-    
-
     return jsonify(recommendations)
     
 
+@app.route('/data/random', methods=['GET'])
+def get_random_data():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    query = 'SELECT * FROM list_skincare ORDER BY RAND() LIMIT 1'
+
+    try:
+        # Mengecek kecocokan username dan password di database
+        cursor.execute(query)
+        result = cursor.fetchall()
+
+        return jsonify(result)
+
+       
+    except Exception as e:
+        conn.close()
+        response = {
+            'status': 'error',
+            'message': 'Terjadi kesalahan saat mengambil data',
+            'error': str(e)
+        }
+        return jsonify(response)
+
+
 if __name__ == '__main__':
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "key.json"  # Set the service account credentials
-    # load_my_model()
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "key.json" 
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 3000)))
