@@ -29,7 +29,7 @@ def login():
 
         if result:
             # Jika data ditemukan, mengembalikan nama dan username
-            nama = result[1]
+            nama = result[2]
 
             response = {
                 'status': 'success',
