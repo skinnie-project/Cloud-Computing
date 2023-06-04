@@ -4,6 +4,7 @@ from auth.login import login
 from auth.register import register, register_google
 from auth.forgot import forgot
 from product.show import get_popular, get_product_detail
+from product.article import get_article
 from predict.predict import predict, predict_base64
 from predict.recommend import get_predict_result, get_product_rekomen
 
@@ -50,6 +51,10 @@ def get_predict_result_route():
 @app.route('/predict/recommend', methods=['GET'])
 def get_product_rekomen_route():
     return get_product_rekomen()
+
+@app.route('/article', methods=['GET'])
+def get_article_route():
+    return get_article()
     
 if __name__ == '__main__':
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "auth/key.json" 
