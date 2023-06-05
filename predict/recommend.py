@@ -79,7 +79,7 @@ def content_recommendations(user_skin_type):
         }
         recommendations.append(recommendation)
         
-        if len(recommendations) == 20: # Maximum list
+        if len(recommendations) == 50: # Maximum list
             break
 
     return recommendations
@@ -88,14 +88,36 @@ def content_recommendations(user_skin_type):
 def get_predict_result():
     key_ingredients = request.args.get('ingredients')
     predicted_result = request.args.get('predicted')
+    filter_by = request.args.get('filter_by')
+    subcategory = request.args.get('subcategory')
 
     # Membuat koneksi MySQL
     conn = mysql.connect()
     cursor = conn.cursor()
-
-    query = "SELECT * FROM list_skincare WHERE suitable_for LIKE '%" + predicted_result + "%' AND ingredients LIKE '%" + key_ingredients + "%' ORDER BY reviewed DESC LIMIT 10"
+    
+    if key_ingredients == "Semua ingredients" and subcategory == "Semua subcategory":
+        query = "SELECT * FROM list_skincare WHERE (suitable_for LIKE '%" + predicted_result + "%' OR suitable_for = 'Semua jenis kulit')"
+    elif key_ingredients == "Semua ingredients":
+        query = "SELECT * FROM list_skincare WHERE (suitable_for LIKE '%" + predicted_result + "%' OR suitable_for = 'Semua jenis kulit') AND subcategory = '" + subcategory + "'"
+    elif subcategory == "Semua subcategory":
+        query = "SELECT * FROM list_skincare WHERE (suitable_for LIKE '%" + predicted_result + "%' OR suitable_for = 'Semua jenis kulit') AND ingredients LIKE '%" + key_ingredients + "%'"
+    else:
+        query = "SELECT * FROM list_skincare WHERE (suitable_for LIKE '%" + predicted_result + "%' OR suitable_for = 'Semua jenis kulit') AND ingredients LIKE '%" + key_ingredients + "%' AND subcategory = '" + subcategory + "'"
+    
+    filter_by = request.args.get('filter_by')
+    if filter_by == "Review Terbanyak":
+        query += " ORDER BY reviewed DESC LIMIT 100"
+    elif filter_by == "Harga Tertinggi ":
+        query += " ORDER BY price DESC LIMIT 100"
+    elif filter_by == "Harga Terendah":
+        query += " ORDER BY price ASC LIMIT 100"
+    elif filter_by == "Rating Tertinggi":
+        query += " ORDER BY rate DESC LIMIT 100"
+    else:
+        query += " ORDER BY brand ASC"
+        
     cursor.execute(query)
-
+    
     try:
         # Mendapatkan hasil query
         rows = cursor.fetchall()

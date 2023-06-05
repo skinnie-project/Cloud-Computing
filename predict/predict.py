@@ -58,11 +58,33 @@ def upload_image_to_storage(image_base64, filename):
     image_url = f"https://storage.googleapis.com/{bucket_name}/uploaded-photos/{filename}"
     return image_url
 
+def upload_image_to_storage_file(file, filename):
+    
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+
+    directory = "uploaded-photos"
+    blob_path = f"{directory}/{filename}"
+    file_blob = bucket.blob(blob_path)
+
+    file_content = file.read()
+
+    # Upload the image file to Google Cloud Storage
+    file_blob.upload_from_string(file_content, content_type='image/jpeg')
+    print(f"Image {filename} uploaded to Google Cloud Storage.")
+
+    print(f"Image {filename} has been public.")
+
+    image_url = f"https://storage.googleapis.com/{bucket_name}/uploaded-photos/{filename}"
+    return image_url
+
 
 def predict():
     file = request.files['image']
-    file.save('predict/uploaded_images.jpg')
-    returned_predicted_class, returned_predicted = predict_image('predict/uploaded_images.jpg')
+    filename = request.form['filename']
+    upload_image_to_storage_file(file, filename)
+    file.save('uploaded_image.jpg')
+    returned_predicted_class, returned_predicted = predict_image('uploaded_images.jpg')
     return jsonify({'prediction_rate': returned_predicted_class, 'predicted': returned_predicted})
 
 

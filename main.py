@@ -5,8 +5,6 @@ from auth.register import register, register_google
 from auth.forgot import forgot
 from product.show import get_popular, get_product_detail
 from product.article import get_article
-from product.filterIngredients import filterIngredients, filterSubcategory
-from product.filterProduct import filterProducts, filterSubcategoryRekomen
 from predict.predict import predict, predict_base64
 from predict.recommend import get_predict_result, get_product_rekomen
 
@@ -51,32 +49,16 @@ def predict_base64_route():
     return predict_base64()
 
 #=============================================================================
-# Ingredients
-@app.route('/predict/result', methods=['GET'])
+# Ingredients dan Rekomen
+@app.route('/predict/filter', methods=['GET'])
 def get_predict_result_route():
     return get_predict_result()
 
-@app.route('/predict/result/filter', methods=['GET'])
-def get_ingredients_filter_route():
-    return filterIngredients()
-
-@app.route('/predict/result/filter/subcategory', methods=['GET'])
-def get_ingredients_filter_subcategory_route():
-    return filterSubcategory()
-
 #=============================================================================
-# Produk
+# Produk Rekomendasi
 @app.route('/predict/recommend', methods=['GET'])
 def get_product_rekomen_route():
     return get_product_rekomen()
-
-@app.route('/predict/recommend/filter', methods=['GET'])
-def get_product_filter_route():
-    return filterProducts()
-
-@app.route('/predict/recommend/filter/subcategory', methods=['GET'])
-def get_product_filter_subcategory_route():
-    return filterSubcategoryRekomen()
 
 #=============================================================================
 
