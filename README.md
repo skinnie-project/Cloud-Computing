@@ -1,6 +1,7 @@
 # Cloud Computing
 Use api-endpoint-python. This program using Google Cloud Run
 
+Up-to-date API Doc: https://docs.google.com/document/d/1wVXSzpBjuUVRqfHh6AFD8sjnknrv_X4iSuyU-dqs4mY/edit?usp=sharing
 ## URL
 
 https://skinnie.my.id/{endpoint}
