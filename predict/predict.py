@@ -81,9 +81,9 @@ def upload_image_to_storage_file(file, filename):
 
 def predict():
     file = request.files['image']
-#     filename = request.form['filename']
-#     upload_image_to_storage_file(file, filename)
-    file.save('uploaded_image.jpg')
+    filename = request.form['filename']
+    file.save('uploaded_images.jpg')
+    upload_image_to_storage_file(file, filename)
     returned_predicted_class, returned_predicted = predict_image('uploaded_images.jpg')
     return jsonify({'prediction_rate': returned_predicted_class, 'predicted': returned_predicted})
 
