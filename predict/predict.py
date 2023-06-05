@@ -67,10 +67,9 @@ def upload_image_to_storage_file(file, filename):
     blob_path = f"{directory}/{filename}"
     file_blob = bucket.blob(blob_path)
 
-    file_content = file.read()
-
+    file.seek(0)
     # Upload the image file to Google Cloud Storage
-    file_blob.upload_from_string(file_content, content_type='image/jpeg')
+    file_blob.upload_from_file(file, content_type='image/jpeg')
     print(f"Image {filename} uploaded to Google Cloud Storage.")
 
     print(f"Image {filename} has been public.")
