@@ -51,6 +51,17 @@ nickname  as string
 email     as string
 ```
 
+### Predict Image (Terpakai)
+
+* Endpoint  : /predict
+* Method    : POST
+* Request body :
+
+```
+image     as request.files
+filename  as request.form
+```
+
 ### Predict base64
 
 * Endpoint  : /predict/base64
