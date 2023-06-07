@@ -8,6 +8,7 @@ from PIL import Image
 import numpy as np
 import requests
 from io import BytesIO
+import mimetypes
 
 bucket_name = "skinnie-bucket"
 
@@ -86,8 +87,38 @@ def predict():
     file.save('uploaded_images.jpg')
     upload_image_to_storage_file(file, filename)
     returned_predicted_class, returned_predicted = predict_image('uploaded_images.jpg')
-    return jsonify({'prediction_rate': returned_predicted_class, 'predicted': returned_predicted})
-
+    if returned_predicted == "Normal":
+        return jsonify(
+            {
+                'prediction_rate': returned_predicted_class, 
+                'predicted': returned_predicted,
+                'key_ingredients_1':"Niacinamide",       
+                'key_ingredients_2':"Lactic Acid",
+                'key_ingredients_3':"Hyaluronic Acid",
+                'key_ingredients_4':"Aloe Vera",
+                    
+             })
+    elif returned_predicted == "Berminyak":
+        return jsonify(
+            {
+                'prediction_rate': returned_predicted_class, 
+                'predicted': returned_predicted,
+                'key_ingredients_1':"Niacinamide",
+                'key_ingredients_2':"Salicylic Acid",
+                'key_ingredients_3':"Hyaluronic Acid",
+                'key_ingredients_4':"Glycolic Acid",
+             })
+    else:
+        return jsonify(
+            {
+                'prediction_rate': returned_predicted_class, 
+                'predicted': returned_predicted,
+                'key_ingredients_1':"Glycerin",
+                'key_ingredients_2':"Retinol",
+                'key_ingredients_3':"Lactic Acid",
+                'key_ingredients_4':"Squalane",
+             })
+    
 
 def predict_base64():
     # url = request.json['image_url']
