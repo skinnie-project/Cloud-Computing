@@ -67,9 +67,18 @@ email     as string
 
 ### Show Article
 
-* Endpoint  : /data/popular
+* Endpoint  : /article
 * Method    : GET
-* Request body : None
+
+```
+Request (URL)
+
+Tampil semua artikel:
+https://skinnie.my.id/article
+
+Ambil Detail:
+https://skinnie.my.id/article?id=1
+```
 
 ### Predict Image (Terpakai)
 
