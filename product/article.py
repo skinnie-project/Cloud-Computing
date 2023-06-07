@@ -19,11 +19,14 @@ def get_article():
     conn = mysql.connect()
     cursor = conn.cursor()
 
-    query = "SELECT * FROM artikel WHERE id = '" + article_id + "'"
-    cursor.execute(query)
+    if article_id is None:
+        query = "SELECT * FROM artikel"
+    else:
+        query = "SELECT * FROM artikel WHERE id = '" + article_id + "'"
     
     try:
         # Mendapatkan hasil query
+        cursor.execute(query)
         rows = cursor.fetchall()
         results = []
         for row in rows:
