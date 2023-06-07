@@ -30,14 +30,15 @@ username  as string
 password  as string
 ```
 
-### Predict
+### Forgot Password
 
-* Endpoint  : /predict
+* Endpoint  : /forgot
 * Method    : POST
 * Request body :
 
 ```
-image     as files
+username  as string
+new_password  as string
 ```
 
 ### Register Google
@@ -51,6 +52,24 @@ name      as string
 nickname  as string
 email     as string
 ```
+
+### Product Popular Homepage
+
+* Endpoint  : /article
+* Method    : GET
+* Request   : https://skinnie.my.id/article?id=1
+
+### Product Detail
+
+* Endpoint  : /data/detail
+* Method    : GET
+* Request   : https://skinnie.my.id/data/detail?id=1
+
+### Show Article
+
+* Endpoint  : /data/popular
+* Method    : GET
+* Request body : None
 
 ### Predict Image (Terpakai)
 
@@ -72,4 +91,26 @@ filename  as request.form
 ```
 image     as string
 filename  as string
+```
+### Predict Result Ingredients
+
+* Endpoint      : /predict/filter
+* Method        : GET
+* Request body  : https://skinnie.my.id/predict/filter?ingredients=Semua ingredients&subcategory=Semua subcategory&predicted=normal
+
+```
+ingredients   as string
+predicted     as string (ambil dari hasil predict sebelumnya)
+subcategory   as string
+filter_by     as string (opsional)
+```
+
+### Product Recommend
+
+* Endpoint      : /predict/recommend
+* Method        : GET
+* Request body  : https://skinnie.my.id/predict/recommend?predicted=Normal
+
+```
+predicted     as string (ambil dari hasil predict sebelumnya)
 ```
