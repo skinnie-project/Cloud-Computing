@@ -60,9 +60,9 @@ username  as string
 new_password  as string
 ```
 
-### Register Google
+### Login Google
 
-* Endpoint  : /register/google
+* Endpoint  : /login/google
 * Method    : POST
 * Request body :
 
@@ -74,9 +74,9 @@ email     as string
 
 ### Product Popular Homepage
 
-* Endpoint  : /article
+* Endpoint  : /data/popular
 * Method    : GET
-* Request   : https://skinnie.my.id/article?id=1
+* Request   : https://skinnie.my.id/data/popular
 
 ### Product Detail
 
@@ -99,7 +99,7 @@ Ambil Detail:
 https://skinnie.my.id/article?id=1
 ```
 
-### Predict Image (Terpakai)
+### Predict Image
 
 * Endpoint  : /predict
 * Method    : POST
@@ -110,16 +110,6 @@ image     as request.files
 filename  as request.form
 ```
 
-### Predict base64
-
-* Endpoint  : /predict/base64
-* Method    : POST
-* Request body :
-
-```
-image     as string
-filename  as string
-```
 ### Predict Result Ingredients
 
 * Endpoint      : /predict/filter
