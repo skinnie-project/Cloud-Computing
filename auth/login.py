@@ -13,22 +13,19 @@ app.config['MYSQL_DATABASE_HOST'] = '34.128.86.191'
 mysql.init_app(app)
 
 def login():
-    # Mendapatkan data dari permintaan POST
     data = request.get_json()
     username = data['username']
     password = data['password']
 
-    # Membuat koneksi MySQL
+    # Koneksi MySQL
     conn = mysql.connect()
     cursor = conn.cursor()
 
     try:
-        # Mengecek kecocokan username dan password di database
         cursor.execute("SELECT * FROM login_normal WHERE username = %s AND password = %s", (username, password))
         result = cursor.fetchone()
 
         if result:
-            # Jika data ditemukan, mengembalikan nama dan username
             nama = result[2]
 
             response = {

@@ -15,7 +15,7 @@ mysql.init_app(app)
 def get_article():
     article_id = request.args.get('id')
 
-    # Membuat koneksi MySQL
+    # Koneksi MySQL
     conn = mysql.connect()
     cursor = conn.cursor()
 
@@ -25,7 +25,6 @@ def get_article():
         query = "SELECT * FROM artikel WHERE id = '" + article_id + "'"
     
     try:
-        # Mendapatkan hasil query
         cursor.execute(query)
         rows = cursor.fetchall()
         results = []
@@ -39,7 +38,6 @@ def get_article():
             }
             results.append(result)
 
-        # Mengembalikan hasil dalam format JSON
         return jsonify(results)
 
     except Exception as e:

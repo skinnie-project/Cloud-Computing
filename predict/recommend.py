@@ -19,7 +19,7 @@ mysql.init_app(app)
 
 model = None
 
-data = pd.read_csv('dataset/new_dataset.csv', sep=';')  # Update with your CSV file path
+data = pd.read_csv('dataset/new_dataset.csv', sep=';') 
 products = data.to_dict(orient='records')
 
 descriptions = [product['product_name'] + ' ' + product['ingredients'] for product in products]
@@ -79,7 +79,7 @@ def content_recommendations(user_skin_type):
         }
         recommendations.append(recommendation)
         
-        if len(recommendations) == 50: # Maximum list
+        if len(recommendations) == 50:
             break
 
     return recommendations
@@ -119,10 +119,8 @@ def get_predict_result():
     cursor.execute(query)
     
     try:
-        # Mendapatkan hasil query
         rows = cursor.fetchall()
 
-        # Mengubah hasil query menjadi format JSON yang terstruktur
         results = []
         for row in rows:
             result = {
@@ -142,7 +140,6 @@ def get_predict_result():
             }
             results.append(result)
 
-        # Mengembalikan hasil dalam format JSON
         return jsonify(results)
 
 

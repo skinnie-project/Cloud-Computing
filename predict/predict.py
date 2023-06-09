@@ -48,12 +48,10 @@ def upload_image_to_storage(image_base64, filename):
     # Decode base64 image data
     image_data = base64.b64decode(image_base64)
 
-    # Upload the image file to Google Cloud Storage
+    # Upload to Google Cloud Storage
     file_blob.upload_from_string(image_data, content_type='image/jpeg')
     print(f"Image {filename} uploaded to Google Cloud Storage.")
 
-    # filez_blob = bucket.blob(filename)
-    # filez_blob.make_public()
     print(f"Image {filename} has been public.")
 
     image_url = f"https://storage.googleapis.com/{bucket_name}/uploaded-photos/{filename}"
@@ -71,7 +69,7 @@ def upload_image_to_storage_file(file, filename):
     content_type, _ = mimetypes.guess_type(filename)
     file.seek(0)
     
-    # Upload the image file to Google Cloud Storage
+    # Upload to Google Cloud Storage
     file_blob.upload_from_file(file, content_type=content_type)
     print(f"Image {filename} uploaded to Google Cloud Storage.")
 
@@ -121,18 +119,13 @@ def predict():
     
 
 def predict_base64():
-    # url = request.json['image_url']
     image_base64 = request.json['image']
     filename = request.json['filename']
     olahb64 = upload_image_to_storage(image_base64, filename)
     
     response = requests.get(olahb64)
     image = Image.open(BytesIO(response.content))
-    # image = Image.open(BytesIO(olahb64))
     image.save('predict/uploaded_images.jpg')
-    # file = request.files['image']
-    # file.save('uploaded_image.jpg')
-    # predicted_class = predict_image('uploaded_images.jpg')
     global predicted_result
     returned_predicted_class, returned_predicted = predict_image('predict/uploaded_images.jpg')
     

@@ -17,12 +17,11 @@ def forgot():
     username = data['username']
     new_password = data['new_password']
 
-    # Membuat koneksi MySQL
+    # Koneksi MySQL
     conn = mysql.connect()
     cursor = conn.cursor()
 
     try:
-        # Mengecek apakah username sudah terdaftar
         cursor.execute("SELECT * FROM login_normal WHERE username = %s", (username,))
         result = cursor.fetchone()
 

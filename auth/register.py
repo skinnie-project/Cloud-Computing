@@ -13,19 +13,17 @@ app.config['MYSQL_DATABASE_HOST'] = '34.128.86.191'
 mysql.init_app(app)
 
 def register():
-    # Mendapatkan data dari permintaan POST
     data = request.get_json()
     username = data['username']
     email = data['email']
     nama = data['nama']
     password = data['password']
 
-    # Membuat koneksi MySQL
+    # Koneksi MySQL
     conn = mysql.connect()
     cursor = conn.cursor()
 
     try:
-        # Mengecek apakah username sudah terdaftar
         cursor.execute("SELECT * FROM login_normal WHERE username = %s", (username,))
         result = cursor.fetchone()
 
@@ -37,7 +35,6 @@ def register():
             }
             return jsonify(response)
 
-        # Memasukkan data ke dalam tabel
         cursor.execute("INSERT INTO login_normal (username, email, nama, password) VALUES (%s, %s, %s, %s)", (username, email, nama, password))
         conn.commit()
         conn.close()
@@ -59,19 +56,16 @@ def register():
         return jsonify(response)
     
 def login_google():
-    # Mendapatkan data dari permintaan POST
     data = request.get_json()
     fullname = data['name']
     nickname = data['nickname']
     email = data['email']
 
-    # Membuat koneksi MySQL
+    # Koneksi MySQL
     conn = mysql.connect()
     cursor = conn.cursor()
 
     try:
-
-        # Memasukkan data ke dalam tabel
         cursor.execute("INSERT INTO login_google (fullname, nickname, email) VALUES (%s, %s, %s)", (fullname, nickname, email))
         conn.commit()
         conn.close()

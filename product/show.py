@@ -40,7 +40,6 @@ def get_popular():
             }
             results.append(result)
 
-        # Mengembalikan hasil dalam format JSON
         return jsonify(results)
     
     except Exception as e:
@@ -56,7 +55,7 @@ def get_popular():
 def get_product_detail():
     product_id = request.args.get('id')
 
-    # Membuat koneksi MySQL
+    # Koneksi MySQL
     conn = mysql.connect()
     cursor = conn.cursor()
 
@@ -64,7 +63,6 @@ def get_product_detail():
     cursor.execute(query)
     
     try:
-        # Mendapatkan hasil query
         rows = cursor.fetchall()
         results = []
         for row in rows:
@@ -85,7 +83,6 @@ def get_product_detail():
             }
             results.append(result)
 
-        # Mengembalikan hasil dalam format JSON
         return jsonify(results)
 
     except Exception as e:
