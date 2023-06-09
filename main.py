@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from auth.login import login
-from auth.register import register, register_google
+from auth.register import register, login_google
 from auth.forgot import forgot
 from product.show import get_popular, get_product_detail
 from product.article import get_article
@@ -20,9 +20,9 @@ def login_route():
 def register_route():
     return register()
 
-@app.route('/register/google', methods=['POST'])
-def register_google_route():
-    return register_google()
+@app.route('/login/google', methods=['POST'])
+def login_google_route():
+    return login_google()
 
 @app.route('/forgot', methods=['POST'])
 def forgot_route():
