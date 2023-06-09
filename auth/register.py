@@ -58,7 +58,7 @@ def register():
         }
         return jsonify(response)
     
-def register_google():
+def login_google():
     # Mendapatkan data dari permintaan POST
     data = request.get_json()
     fullname = data['name']
