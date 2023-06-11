@@ -3,4 +3,6 @@ model/model1.h5
 model/model1-weights.h5
 model/model.pkl
 model/vectorizer.pkl
+model/model2-weights.h5
+model/model2.h5
 auth/key.json

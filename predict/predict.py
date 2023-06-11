@@ -3,6 +3,8 @@ from flask import Flask, request, jsonify
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.efficientnet import preprocess_input
+import tensorflow as tf
+import tensorflow_hub as hub
 import base64
 from PIL import Image
 import numpy as np
@@ -16,19 +18,20 @@ app = Flask(__name__)
 
 model = None
 
+custom_objects = {'KerasLayer': hub.KerasLayer}
+
 def load_my_model():
     global model
-    model = load_model('model/model1.h5')
-    model.load_weights('model/model1-weights.h5')
+    model = tf.keras.models.load_model('model/model2.h5', custom_objects=custom_objects)
+    model.load_weights('model/model2-weights.h5')
 
 
 def predict_image(image_path):
     if model is None:
         load_my_model()
     img = image.load_img(image_path, target_size=(224, 224))
-    img = image.img_to_array(img)
-    img = np.expand_dims(img, axis=0)
-    img = preprocess_input(img)
+    img = np.array(img) / 255.0 #new
+    img = img[np.newaxis, ...] #new
     pred = model.predict(img)
     classes = ['Kering', 'Normal', 'Berminyak']
     predicted_class = {class_name: float(pred[0][i]) for i, class_name in enumerate(classes)}

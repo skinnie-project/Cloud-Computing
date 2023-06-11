@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, render_template
 from auth.login import login
 from auth.register import register, login_google
 from auth.forgot import forgot
@@ -8,8 +8,17 @@ from product.article import get_article
 from predict.predict import predict, predict_base64
 from predict.recommend import get_predict_result, get_product_rekomen
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder='assets', template_folder='web')
 
+#=============================================================================
+# Website
+@app.route('/')
+def website():
+    return render_template('index.html')
+
+@app.route('/about')
+def website_about():
+    return render_template('about.html')
 #=============================================================================
 # Auth
 @app.route('/login', methods=['POST'])

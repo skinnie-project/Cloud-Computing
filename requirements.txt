@@ -11,3 +11,4 @@ gunicorn
 google-cloud-storage
 flask-mysql
 requests
+tensorflow_hub
