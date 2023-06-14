@@ -90,6 +90,12 @@ email     as string
 
 * Endpoint  : /data/detail
 * Method    : GET
+* Request   : https://skinnie.my.id/data/search?product=wardah
+
+### Product Search
+
+* Endpoint  : /data/search
+* Method    : GET
 * Request   : https://skinnie.my.id/data/detail?id=1
 
 ### Show Article
