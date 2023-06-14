@@ -3,7 +3,7 @@ from flask import Flask, render_template
 from auth.login import login
 from auth.register import register, login_google
 from auth.forgot import forgot
-from product.show import get_popular, get_product_detail
+from product.show import get_popular, get_product_detail, search_product
 from product.article import get_article
 from predict.predict import predict, predict_base64
 from predict.recommend import get_predict_result, get_product_rekomen
@@ -46,6 +46,10 @@ def get_popular_route():
 @app.route('/data/detail', methods=['GET'])
 def get_product_detail_route():
     return get_product_detail()
+
+@app.route('/data/search', methods=['GET'])
+def search_product_route():
+    return search_product()
 
 #=============================================================================
 # Proses Predict
