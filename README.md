@@ -3,6 +3,7 @@ Use api-endpoint-python. This program using Google Cloud Run
 
 API Doc: https://docs.google.com/document/d/1wVXSzpBjuUVRqfHh6AFD8sjnknrv_X4iSuyU-dqs4mY/edit?usp=sharing
 ## URL
+Landing Page: https://skinnie.my.id
 
 https://skinnie.my.id/{endpoint}
 
