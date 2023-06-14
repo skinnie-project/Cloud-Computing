@@ -29,8 +29,8 @@ docker push gcr.io/<name_of_google_project>/<name>
 
 * https://www.youtube.com/watch?v=vieoHqt7pxo&pp=ygUTY2xvdWQgcnVuIGFpIGRlcGxveQ%3D%3D
 * https://www.youtube.com/watch?v=xcODUk0o6tU&t=619s&pp=ygUTY2xvdWQgcnVuIGFpIGRlcGxveQ%3D%3D
-* https://github.com/mdhkrmd/SiBangkit
 * https://www.python-engineer.com/posts/cloud-run-deployment/
+* https://github.com/Santhoshkumard11/image-classification-and-deployed-using-flask
  
 ## Endpoint
 ### Register
