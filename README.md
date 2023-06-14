@@ -24,6 +24,13 @@ docker push gcr.io/<name_of_google_project>/<name>
 * After finish building the containerimage, open the Cloud Run, Create Service, and for Container Image URL, click Select, Container Registry, expand gcr.io/<name_of_google_project>/<name>, then you will find the latest containerimage, choose it and click Select
 * Then you just to configure your Cloud Run with Container Port 3000. We recommend to use minimum 2 GiB of memory.
 
+## Reference
+
+* https://www.youtube.com/watch?v=vieoHqt7pxo&pp=ygUTY2xvdWQgcnVuIGFpIGRlcGxveQ%3D%3D
+* https://www.youtube.com/watch?v=xcODUk0o6tU&t=619s&pp=ygUTY2xvdWQgcnVuIGFpIGRlcGxveQ%3D%3D
+* https://github.com/mdhkrmd/SiBangkit
+* https://www.python-engineer.com/posts/cloud-run-deployment/
+ 
 ## Endpoint
 ### Register
 
