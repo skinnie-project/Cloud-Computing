@@ -50,10 +50,10 @@ password  as string
  
 ```
 {
-    "username": "ikiw",
-    "email": "ikiw@gmail.com",
-    "nama": "Ikiw Setiawan",
-    "password": "ikiwhebat123"
+    "username" : "ikiw",
+    "email"    : "ikiw@gmail.com",
+    "nama"     : "Ikiw Setiawan",
+    "password" : "ikiwhebat123"
 }
 ```
 
