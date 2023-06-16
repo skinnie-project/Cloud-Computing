@@ -38,7 +38,7 @@ docker push gcr.io/<name_of_google_project>/<name>
 
 * Endpoint  : /register
 * Method    : POST
-* Request body :
+* Request body : application/json
 
 ```
 username  as string
