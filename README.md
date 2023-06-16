@@ -46,6 +46,16 @@ email     as string
 nama      as string
 password  as string
 ```
+* Example Value
+ 
+```
+{
+    "username": "ikiw",
+    "email": "ikiw@gmail.com",
+    "nama": "Ikiw Setiawan",
+    "password": "ikiwhebat123"
+}
+```
 
 ### Login
 
