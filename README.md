@@ -1,7 +1,6 @@
 # Cloud Computing
-Use api-endpoint-python. This program using Google Cloud Run
+This program using Google Cloud Run
 
-API Doc: https://docs.google.com/document/d/1wVXSzpBjuUVRqfHh6AFD8sjnknrv_X4iSuyU-dqs4mY/edit?usp=sharing
 ## URL
 Landing Page: https://skinnie.my.id
 
@@ -86,21 +85,21 @@ email     as string
 
 * Endpoint  : /data/popular
 * Method    : GET
-* Request   : https://skinnie.my.id/data/popular
+* URL       : https://skinnie.my.id/data/popular
 
 ### Product Detail
 
-* Endpoint  : /data/detail
-* Method    : GET
-* Parameter : id
-* Request   : https://skinnie.my.id/data/detail?id=1
+* Endpoint    : /data/detail
+* Method      : GET
+* Parameter   : id
+* URL         : https://skinnie.my.id/data/detail?id=1
 
-### Product Search
+### Brand Search
 
 * Endpoint  : /data/search
 * Method    : GET
 * Parameter : product
-* Request   : https://skinnie.my.id/data/search?product=wardah
+* URL       : https://skinnie.my.id/data/search?product=wardah
 
 ### Show Article
 
@@ -121,7 +120,7 @@ https://skinnie.my.id/article?id=1
 
 * Endpoint  : /predict
 * Method    : POST
-* Request body :
+* Form-Data :
 
 ```
 image     as request.files
@@ -130,9 +129,14 @@ filename  as request.form
 
 ### Predict Result Ingredients
 
-* Endpoint      : /predict/filter
-* Method        : GET
-* Request body  : https://skinnie.my.id/predict/filter?ingredients=Semua ingredients&subcategory=Semua subcategory&predicted=normal
+* Endpoint  : /predict/filter
+* Method    : GET
+* Parameter :
+  * ingredients
+  * predicted
+  * subcategory
+  * filter_by
+* URL       : https://skinnie.my.id/predict/filter?ingredients=Semua ingredients&subcategory=Semua subcategory&predicted=normal
 
 ```
 ingredients   as string
@@ -143,9 +147,11 @@ filter_by     as string (opsional)
 
 ### Product Recommend
 
-* Endpoint      : /predict/recommend
-* Method        : GET
-* Request body  : https://skinnie.my.id/predict/recommend?predicted=Normal
+* Endpoint  : /predict/recommend
+* Method    : GET
+* Parameter :
+  * predicted
+* URL       : https://skinnie.my.id/predict/recommend?predicted=Normal
 
 ```
 predicted     as string (ambil dari hasil predict sebelumnya)
