@@ -51,7 +51,7 @@ password  as string
 
 * Endpoint  : /login
 * Method    : POST
-* Request body :
+* Request body : application/json
 
 ```
 username  as string
@@ -62,7 +62,7 @@ password  as string
 
 * Endpoint  : /forgot
 * Method    : POST
-* Request body :
+* Request body : application/json
 
 ```
 username  as string
@@ -73,7 +73,7 @@ new_password  as string
 
 * Endpoint  : /login/google
 * Method    : POST
-* Request body :
+* Request body : application/json
 
 ```
 name      as string
@@ -120,7 +120,7 @@ https://skinnie.my.id/article?id=1
 
 * Endpoint  : /predict
 * Method    : POST
-* Form-Data :
+* Request body : multipart/form-data
 
 ```
 image     as request.files
