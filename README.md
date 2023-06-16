@@ -67,6 +67,14 @@ password  as string
 username  as string
 password  as string
 ```
+ * Example Value
+ 
+```
+{
+    "username" : "ikiw",
+    "password" : "ikiwhebat123"
+}
+```
 
 ### Forgot Password
 
@@ -77,6 +85,14 @@ password  as string
 ```
 username  as string
 new_password  as string
+```
+  * Example Value
+ 
+```
+{
+    "username" : "ikiw",
+    "new_password" : "ikiwhebat321"
+}
 ```
 
 ### Login Google
@@ -89,6 +105,15 @@ new_password  as string
 name      as string
 nickname  as string
 email     as string
+```
+  * Example Value
+ 
+```
+{
+    "name" : "ikiw",
+    "nickname" : "ikiwzz",
+    "email": "kiki@gmail.com"
+}
 ```
 
 ### Product Popular Homepage
